@@ -72,7 +72,7 @@ def xor(a: int, b: int) ->int:
 	:return: Le XOR des deux nombres
 	"""
     # TODO
-    return a + b
+    return (a | b) & ~(a & b) #XOR = (a OU b) ET NON (a ET b)
 
 
 """
