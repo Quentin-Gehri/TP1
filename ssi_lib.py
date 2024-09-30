@@ -14,8 +14,13 @@ def mod(a: int, n: int) ->int:
 	:param n: Le modulo
 	:return: Le résultat de l'opération modulaire
 	"""
-    # TODO
-    pass
+    while a >= n:
+        a = a - n
+        
+    while a < 0 :
+        a = a + n
+      
+    return a 
 
 def add_mod(a: int, b: int, n: int) ->int:
     """
