@@ -47,6 +47,21 @@ def mul_mod(a: int, b: int, n: int) ->int:
     mult = a * b #Multiplier a et b
     return mod(mult, n) #Faire modulo entre la multiplication et n
 
+def left_shift(a: int) -> int:
+    """Effectue un décalage à gauche d'un bit."""
+    return a * 2  # Décalage à gauche équivaut à multiplier par 2.
+
+def right_shift(a: int) -> int:
+    """Effectue un décalage à droite d'un bit."""
+    return a // 2  # Décalage à droite équivaut à diviser par 2.
+
+def wrap_shift(a: int, length: int) -> int:
+    """Assure que le nombre reste dans les limites de 'length' bits."""
+    # Convertir a en binaire et récupérer les derniers 'length' bits
+    binary_str = bin(a)[2:]  # Enlève le préfixe '0b'
+    # Prendre les 'length' derniers bits
+    wrapped_str = binary_str[-length:]  # Prend les 'length' derniers bits
+    return int(wrapped_str, 2)  # Convertit le binaire en entier
 
 def shift(a: int, n: int, length: int) ->int:
     """
@@ -58,8 +73,16 @@ def shift(a: int, n: int, length: int) ->int:
 	:return: Le nombre décalé
 	:NOTE: La fonction shift est cyclique.
 	"""
-    # TODO
-    pass
+    for _ in range(n):
+        a = left_shift(a)  # Décale à gauche
+        # Récupérer le bit le plus à gauche (le premier bit)
+        leftmost_bit = a // (2 ** length)  # Récupère le bit qui sortirait
+        a = wrap_shift(a,length)  # Réduire a pour rester dans la limite de length
+        # Réinjecter le bit à droite
+        if leftmost_bit > 0:  # S'il y a un bit à réinjecter
+            a += 1  # Réinjecte le bit à droite
+    
+    return a
 
 
 def xor(a: int, b: int) ->int:
