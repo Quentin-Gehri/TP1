@@ -63,7 +63,7 @@ def wrap_shift(a: int, length: int) -> int:
     wrapped_str = binary_str[-length:]  # Prend les 'length' derniers bits
     return int(wrapped_str, 2)  # Convertit le binaire en entier
 
-def shift(a: int, n: int, length: int) ->int:
+def shift(a: int, n: int, length: int = 4) ->int:
     """
 	Effectue un shift CYCLIQUE de :times positions sur la GAUCHE d'un nombre :a, modulo n
 	:param a: Le nombre à décaler

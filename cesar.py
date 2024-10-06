@@ -1,11 +1,11 @@
 from ssi_lib import *
 
-ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+ALPHABET = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-def cesar():
-    pass
-
-
+def cesar(dep):
+    result = shift(a=ALPHABET.index(dep),n=2,length=3)
+     
+    return ALPHABET[result]
 
 
 def advanced_cesar():
