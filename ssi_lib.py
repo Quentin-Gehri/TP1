@@ -36,6 +36,8 @@ def add_mod(a: int, b: int, n: int) ->int:
 
 
 def mul_mod(a: int, b: int, n: int) ->int:
+    
+
     """
 	Effectue une multiplication modulaire : a * b mod n.
 	:param a: Le premier nombre à multiplier
@@ -64,6 +66,8 @@ def wrap_shift(a: int, length: int) -> int:
     return int(wrapped_str, 2)  # Convertit le binaire en entier
 
 def shift(a: int, n: int, length: int = 4) ->int:
+    if isinstance(a,str):
+        a = ord(a)
     """
 	Effectue un shift CYCLIQUE de :times positions sur la GAUCHE d'un nombre :a, modulo n
 	:param a: Le nombre à décaler
