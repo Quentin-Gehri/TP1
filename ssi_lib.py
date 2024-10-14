@@ -53,10 +53,6 @@ def left_shift(a: int) -> int:
     """Effectue un décalage à gauche d'un bit."""
     return a * 2  # Décalage à gauche équivaut à multiplier par 2.
 
-def right_shift(a: int) -> int:
-    """Effectue un décalage à droite d'un bit."""
-    return a // 2  # Décalage à droite équivaut à diviser par 2.
-
 def wrap_shift(a: int, length: int) -> int:
     """Assure que le nombre reste dans les limites de 'length' bits."""
     # Convertir a en binaire et récupérer les derniers 'length' bits
@@ -66,8 +62,7 @@ def wrap_shift(a: int, length: int) -> int:
     return int(wrapped_str, 2)  # Convertit le binaire en entier
 
 def shift(a: int, n: int, length: int = 4) ->int:
-    if isinstance(a,str):
-        a = ord(a)
+
     """
 	Effectue un shift CYCLIQUE de :times positions sur la GAUCHE d'un nombre :a, modulo n
 	:param a: Le nombre à décaler
