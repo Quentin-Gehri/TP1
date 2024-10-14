@@ -1,5 +1,7 @@
 import argparse
 
+from numpy.ma.core import append
+
 from ssi_lib import shift, mul_mod, add_mod, xor, inv_mod, mod
 
 
@@ -33,7 +35,31 @@ def generate_subkeys(key: str) -> list:
 					   Exemple : [[sous_clé_round_1_n1, sous_clé_round_1_n2], [sous_clé_round_2_n1, sous_clé_round_2_n2]]
 	"""
 	# TODO
-	pass
+	subkeys_list = []  # Initialisation d'un tableau vide
+	i = 0
+	debut = 0
+	fin = 4
+	while i != 4:
+		subkey = []
+		j = 0
+		while j != 6:
+			if fin > 31:
+				debut = 0
+				fin = 4
+				shift(key, 6, 32)
+			subkey.append(int(key[debut:fin],2))
+			debut+=4
+			fin+=4
+			j+=1
+		subkeys_list.append(subkey)
+		i+=1
+	return subkeys_list
+
+
+
+
+
+
 
 def encrypt(message: str, subkeys: list) -> str:
 	"""
