@@ -46,7 +46,7 @@ def generate_subkeys(key: str) -> list:
 			if fin > 31:
 				debut = 0
 				fin = 4
-				shift(key, 6, 32)
+				key = bin(shift(int(key), 6, 32))[2:]
 			subkey.append(int(key[debut:fin],2))
 			debut+=4
 			fin+=4
