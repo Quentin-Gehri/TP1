@@ -1,6 +1,5 @@
 from ssi_lib import *
 
-ALPHABET = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 def cesar(message,decalage=3):
     
@@ -16,12 +15,12 @@ def cesar(message,decalage=3):
             encrypted_message += shifted_char
         else:
             encrypted_message += char  
-    return str(encrypted_message)
+    return encrypted_message
 
 
 
 def advanced_cesar(message,decalage):
-    return str(cesar(message,decalage))
+    return cesar(message,decalage)
 
 
 
