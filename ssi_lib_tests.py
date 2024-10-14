@@ -2,11 +2,6 @@ import unittest
 
 from ssi_lib import mod, add_mod, mul_mod, shift, xor, extended_euclide, gcd, inv_mod
 
-"""
-Ceci est un fichier qui vous permet de tester votre code Python.
-Pour le lancer, il suffit de faire "make test" !
-Pour garantir le bon fonctionnement de ce fichier, MERCI DE NE PAS CHANGER CE FICHIER.
-"""
 class SSILibPartOneTestCase(unittest.TestCase):
 	# MOD
 	def test_mod_basic_cases(self):
@@ -93,6 +88,32 @@ class SSILibPartOneTestCase(unittest.TestCase):
 		for i in range(1, 32):
 			for j in range(1, 32):
 				self.assertEqual(xor(i, j), i ^ j)
+
+class SSILibPartTwoTestCase(unittest.TestCase):
+	# INVMOD
+	def test_invmod_basic_cases(self):
+		self.assertEqual(inv_mod(14, 23), 5)
+		self.assertEqual(inv_mod(4, 17), 13)
+
+		# Si a = 0, on retourne 0
+		self.assertEqual(inv_mod(0, 17), 0)
+		# Si le PGCD n'est pas 1, on retourne 0
+		self.assertEqual(inv_mod(4, 16), 0)
+
+	# PGCD
+	def test_gcd_basic_cases(self):
+		self.assertEqual(gcd(10, 10), 10)
+		self.assertEqual(gcd(10, 0), 10)
+		self.assertEqual(gcd(0, 10), 10)
+		self.assertEqual(gcd(0, 0), 0)
+		self.assertEqual(gcd(141, 255), 3)
+		self.assertEqual(gcd(7, 18), 1)
+
+	# EUCLIDE ÉTENDU
+	def test_extended_euclide_basic_cases(self):
+		# https://www.bibmath.net/crypto/index.php?action=affiche&quoi=complements/algoeuclid
+		self.assertEqual(extended_euclide(141, 255), (38, -21))
+		self.assertEqual(extended_euclide(10, 3), (1, -3))
 
 if __name__ == '__main__':
 	unittest.main()

@@ -107,8 +107,9 @@ def gcd(a: int, b: int) ->int:
 	:param b: Le second nombre
 	:return: Le PGCD des deux nombres
 	"""
-    # TODO
-    pass
+    while b != 0:
+        a, b = b, mod(a,b)
+    return a
 
 
 def extended_euclide(a: int, b: int) ->(int, int):
@@ -119,9 +120,11 @@ def extended_euclide(a: int, b: int) ->(int, int):
 	:param b: Le second nombre
 	:return: Les coefficients de Bézout des deux nombres
 	"""
-    # TODO
-    pass
-
+    if b == 0:
+        return 1, 0
+    else:
+        x, y = extended_euclide(b, mod(a,b))
+        return y, x - (a // b) * y
 
 def inv_mod(a: int, n: int) ->int:
     """
@@ -133,9 +136,13 @@ def inv_mod(a: int, n: int) ->int:
 	SI L'INVERSE MODULAIRE N'EXISTE PAS, VOUS DEVREZ RETOURNER 0, et gérer
 	ce cas dans votre code.
 	"""
-    # TODO
-    pass
-
+    x, y = extended_euclide(a, n)
+    
+    # L'inverse n'existe que si a et n sont copremiers
+    if gcd(a, n) != 1:
+        return 0  # L'inverse n'existe pas
+    else:
+        return mod(x,n)
 
 """
             +======================+
