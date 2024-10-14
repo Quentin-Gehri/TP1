@@ -49,17 +49,13 @@ def mul_mod(a: int, b: int, n: int) ->int:
     mult = a * b #Multiplier a et b
     return mod(mult, n) #Faire modulo entre la multiplication et n
 
-def left_shift(a: int) -> int:
-    """Effectue un décalage à gauche d'un bit."""
-    return a * 2  # Décalage à gauche équivaut à multiplier par 2.
 
-def wrap_shift(a: int, length: int) -> int:
-    """Assure que le nombre reste dans les limites de 'length' bits."""
-    # Convertir a en binaire et récupérer les derniers 'length' bits
-    binary_str = bin(a)[2:]  # Enlève le préfixe '0b'
-    # Prendre les 'length' derniers bits
-    wrapped_str = binary_str[-length:]  # Prend les 'length' derniers bits
-    return int(wrapped_str, 2)  # Convertit le binaire en entier
+def clcshift(val : str) -> int:
+    
+    shifted = val[1:] + val[0]
+    
+    return shifted
+ 
 
 def shift(a: int, n: int, length: int = 4) ->int:
 
@@ -72,14 +68,12 @@ def shift(a: int, n: int, length: int = 4) ->int:
 	:return: Le nombre décalé
 	:NOTE: La fonction shift est cyclique.
 	"""
-    for _ in range(n):
-        a = left_shift(a)  # Décale à gauche
-        # Récupérer le bit le plus à gauche (le premier bit)
-        leftmost_bit = a // (2 ** length)  # Récupère le bit qui sortirait
-        a = wrap_shift(a,length)  # Réduire a pour rester dans la limite de length
-        # Réinjecter le bit à droite
-        if leftmost_bit > 0:  # S'il y a un bit à réinjecter
-            a += 1  # Réinjecte le bit à droite
+    val = bin(a)[2:].zfill(length)
+    valshift = val
+    for i in range(n):  
+        valshift = clcshift(valshift)
+        
+    a = int(valshift, 2)
     
     return a
 
