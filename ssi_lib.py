@@ -68,7 +68,27 @@ def shift(a: int, n: int, length: int = 4) ->int:
 	:return: Le nombre décalé
 	:NOTE: La fonction shift est cyclique.
 	"""
-    val = bin(a)[2:].zfill(length)
+
+    if isinstance(a,int) and length != 32:
+        val = bin(a)[2:].zfill(length)
+    else:
+        val = ""
+        binvar = ""
+        a = str(a)
+        if len(a) < 32:
+            binvar = a
+            while len(binvar) < 32:
+                binvar = "0" + binvar
+        else:
+            binvar = a
+
+
+        if isinstance(binvar,str):
+            if all(char in '01' for char in binvar):
+                val = binvar
+            else:
+                binvar = int(a)
+                val = bin(binvar)[2:].zfill(length)
     valshift = val
     for i in range(n):  
         valshift = clcshift(valshift)

@@ -36,30 +36,27 @@ def generate_subkeys(key: str) -> list:
 	"""
 	# TODO
 	subkeys_list = []  # Initialisation d'un tableau vide
-	i = 0
 	debut = 0
 	fin = 4
-	while i != 4:
+	for i in range(0,5):
 		subkey = []
 		j = 0
-		while j != 6:
+		while j < 6:
+			subkey.append(int(key[debut:fin], 2))
 			if fin > 31:
+				key = bin(shift(int(key), 6, 32))[2:]
+				while len(key) < 32:
+					key = "0" + key
 				debut = 0
 				fin = 4
-				key = bin(shift(int(key), 6, 32))[2:]
-			subkey.append(int(key[debut:fin],2))
-			debut+=4
-			fin+=4
+			else:
+				debut+=4
+				fin+=4
 			j+=1
+			if len(subkeys_list) == 4 and len(subkey) == 4:
+				subkeys_list.append(subkey)
+				return subkeys_list
 		subkeys_list.append(subkey)
-		i+=1
-	return subkeys_list
-
-
-
-
-
-
 
 def encrypt(message: str, subkeys: list) -> str:
 	"""
