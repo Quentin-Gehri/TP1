@@ -23,7 +23,15 @@ def half_round(message_blocks: list, subkeys: list) -> list:
 	:return: Les blocks message après un demi-round.
 	"""
 	# TODO
-	pass
+	x1, x2, x3, x4 = message_blocks
+	z1, z2, z3, z4 = subkeys
+	result = [
+		mod(x1 * z1, 16),
+		mod(x2 + z2, 16),
+		mod(x3 + z3, 16),
+		mod(x4 * z4, 16),
+	]
+	return result
 
 def generate_subkeys(key: str) -> list:
 	"""
