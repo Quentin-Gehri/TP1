@@ -60,15 +60,13 @@ def half_round(message_blocks: list, subkeys: list) -> list:
 	:return: Les blocks message après un demi-round.
 	"""
 	# TODO
-	message_blocks = [0 if x == 16 else x for x in message_blocks]
-	subkeys = [0 if z == 16 else z for z in subkeys]
 	x1, x2, x3, x4 = message_blocks
 	z1, z2, z3, z4 = subkeys
 	result = [
-		mul_mod(x1, z1, 17),
+		mul_mod_idea(x1, z1, 17),
 		add_mod(x2, z2, 16),
 		add_mod(x3, z3, 16),
-		mul_mod(x4, z4, 17),
+		mul_mod_idea(x4, z4, 17),
 	]
 	return result
 
