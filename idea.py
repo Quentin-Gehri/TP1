@@ -3,17 +3,54 @@ import argparse
 #from numpy.ma.core import append
 
 from ssi_lib import shift, mul_mod, add_mod, xor, inv_mod, mod
+def replace_zero(val):
+	if val == 16 :
+		return 0
+	elif val == 0:
+		return 16
+	else:
+		return val
+	
+
+def mul_mod_idea(a,b,n):
+	return replace_zero(mul_mod(replace_zero(a),replace_zero(b),n))
 
 
 def full_round(message_blocks: list, subkeys: list) -> list:
-	"""
-	Effectue un round complet de l'algorithme IDEA.
-	:param message_blocks: Le messages sous forme de bloc (X1, X2, X3, X4)
-	:param subkeys: Les sous-clés. Il doit y en avoir EXACTEMENT autant que pour un round (soit 6).
-	:return: Les blocks message après un round complet.
-	"""
-	# TODO
-	pass
+		
+		"""
+		Effectue un round complet de l'algorithme IDEA.
+		:param message_blocks: Le messages sous forme de bloc (X1, X2, X3, X4)
+		:param subkeys: Les sous-clés. Il doit y en avoir EXACTEMENT autant que pour un round 	(soit 6).
+		:return: Les blocks message après un round complet.
+		"""
+		
+    
+		x1, x2, x3, x4 =  message_blocks
+		z1, z2, z3, z4, z5, z6 = subkeys  
+
+
+		s1 = mul_mod_idea(x1, z1, 17)
+		s2 = add_mod(x2, z2, 16)
+		s3 = add_mod(x3, z3, 16)
+		s4 = mul_mod_idea(x4, z4, 17)
+
+		s5 = xor(s1, s3)
+		s6 = xor(s2, s4)
+		
+		s7 = mul_mod_idea(s5, z5 ,17)
+		s8 = add_mod(s6, s7, 16)
+		s9 = mul_mod_idea(s8, z6, 17)
+		s10 = add_mod(s7, s9, 16)
+
+		
+		final_x1 = xor(s1, s9)
+		final_x2 = xor(s3, s9)
+		final_x3 = xor(s2, s10)
+		final_x4 = xor(s4, s10)
+		
+		return [final_x1, final_x3,final_x2, final_x4]
+
 
 def half_round(message_blocks: list, subkeys: list) -> list:
 	"""
