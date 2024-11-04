@@ -105,7 +105,7 @@ def generate_subkeys(key: str) -> list:
 				return subkeys_list
 		subkeys_list.append(subkey)
 
-def encrypt(message: str, subkeys: list) -> str:
+def encrypt(message: str, key: list) -> str:
 	"""
 	Effectue le chiffrement IDEA en fonction d'un message et d'une liste de sous-clés.
 	:param message: Un message faisant EXACTEMENT 16 bits (2 caractères)
@@ -113,7 +113,20 @@ def encrypt(message: str, subkeys: list) -> str:
 	:return: Le message chiffré.
 	"""
 	# TODO
-	pass
+	
+	subkeys = generate_subkeys(key)
+		
+	message_blocks = [int(message[i:i+4], 2) for i in range(0, len(message), 4)]
+		
+	for i in range(4):
+		message_blocks = full_round(message_blocks, subkeys[i])
+		
+	
+	final_blocks = half_round(message_blocks, subkeys[4])
+		
+	ciphertext = ''.join([bin(block)[2:].zfill(4) for block in final_blocks])
+	return ciphertext
+				
 
 def decrypt(cipher: str, subkeys: list) -> str:
 	"""
