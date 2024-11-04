@@ -1,6 +1,6 @@
 import argparse
 
-from numpy.ma.core import append
+#from numpy.ma.core import append
 
 from ssi_lib import shift, mul_mod, add_mod, xor, inv_mod, mod
 
