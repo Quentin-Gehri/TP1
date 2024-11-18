@@ -132,7 +132,7 @@ def gcd(a: int, b: int) ->int:
     return a
 
 
-def extended_euclide(a: int, b: int) ->(int, int):
+def extended_euclide(a: int, b: int):
     """
 	Effectue Euclide Etendu sur deux nombres, a et b.
 	Cela permet de trouver les coefficients de Bézout de deux nombres.
@@ -173,54 +173,79 @@ def inv_mod(a: int, n: int) ->int:
 """
 
 
-def exp_mod(a: int, b: int, n: int) ->int:
+def exp_mod(a: int, b: int, n: int) -> int:
     """
-	Calcule l'exponentiation modulaire de a^b mod m.
-	:param a: La base
-	:param b: L'exposant
-	:param n: Le modulo
-	:return: Le résultat
-	"""
-    # TODO
-    pass
-
-
-def is_prime(a: int) ->bool:
+    Calcule l'exponentiation modulaire de a^b mod n.
+    :param a: La base
+    :param b: L'exposant
+    :param n: Le modulo
+    :return: Le résultat
     """
-	Vérifie que le nombre :n est premier ou non
-	:param a: Le nombre à vérifier
-	:return: Vrai si le nombre est premier, faux autrement
-	"""
-    # TODO
-    pass
+    result = 1
+    a = mod(a, n)  # Handle large base values
+    
+    while b > 0:
+        if b % 2 == 1:
+            result = mul_mod(result, a, n)
+        a = mul_mod(a, a, n)
+        b //= 2
+    
+    return result
 
 
-def generate_prime(b: max) ->int:
+def is_prime(a: int) -> bool:
     """
-	Génère un nombre premier entre [2, b] (b inclus).
-	:param b: La limite supérieure à respecter lors de la génération
-	:return: Un nombre supposément premier.
-	"""
-    # TODO
-    pass
-
-
-def is_generator(a: int, n: int) ->bool:
+    Vérifie que le nombre :a est premier ou non
+    :param a: Le nombre à vérifier
+    :return: Vrai si le nombre est premier, faux autrement
     """
-	Vérifie si un nombre :a est générateur du groupe Zn*.
-	:param a: Le nombre à vérifier
-	:param n: Le groupe dans lequel on vérifie :a
-	:return: Vrai si le nombre est générateur, faux autrement.
-	"""
-    # TODO
-    pass
+    if a <= 1:
+        return False
+    for i in range(2, int(a**0.5) + 1):
+        if a % i == 0:
+            return False
+    return True
 
 
-def find_all_generators(n: int) ->list:
+def generate_prime(b: int) -> int:
     """
-	Génère la liste de tous les générateurs du groupe Zn*
-	:param n: Le groupe dans lequel on veut obtenir tous les générateurs.
-	:return: La liste de tous les générateurs
-	"""
-    # TODO
-    pass
+    Génère un nombre premier entre [2, b] (b inclus).
+    :param b: La limite supérieure à respecter lors de la génération
+    :return: Un nombre supposément premier.
+    """
+    import random
+    while True:
+        num = random.randint(2, b)
+        if is_prime(num):
+            return num
+
+
+def is_generator(a: int, n: int) -> bool:
+    """
+    Vérifie si un nombre :a est générateur du groupe Zn*.
+    :param a: Le nombre à vérifier
+    :param n: Le groupe dans lequel on vérifie :a
+    :return: Vrai si le nombre est générateur, faux autrement.
+    """
+    if gcd(a, n) != 1:
+        return False
+
+    powers = set()
+    for i in range(1, n):
+        powers.add(exp_mod(a, i, n))
+
+    return len(powers) == n - 1
+
+
+def find_all_generators(n: int) -> list:
+    """
+    Génère la liste de tous les générateurs du groupe Zn*.
+    :param n: Le groupe dans lequel on veut obtenir tous les générateurs.
+    :return: La liste de tous les générateurs.
+    """
+    generators = []
+    for a in range(1, n):
+        if is_generator(a, n):
+            generators.append(a)
+    
+    return generators
