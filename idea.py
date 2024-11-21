@@ -1,7 +1,5 @@
 import argparse
 
-#from numpy.ma.core import append
-
 from ssi_lib import shift, mul_mod, add_mod, xor, inv_mod, mod
 def replace_zero(val):
 	if val == 16 :
@@ -27,20 +25,20 @@ def full_round(message_blocks: list, subkeys: list) -> list:
 		
     
 		x1, x2, x3, x4 =  message_blocks
-		z1, z2, z3, z4, z5, z6 = subkeys  
+		z1, z2, z3, z4, z5, z6 = subkeys
 
 
-		s1 = mul_mod_idea(x1, z1, 17)
-		s2 = add_mod(x2, z2, 16)
-		s3 = add_mod(x3, z3, 16)
-		s4 = mul_mod_idea(x4, z4, 17)
+		s1 = mul_mod_idea(int(x1), int(z1), 17)
+		s2 = add_mod(int(x2), int(z2), 16)
+		s3 = add_mod(int(x3), int(z3), 16)
+		s4 = mul_mod_idea(int(x4), int(z4), 17)
 
 		s5 = xor(s1, s3)
 		s6 = xor(s2, s4)
 		
-		s7 = mul_mod_idea(s5, z5 ,17)
+		s7 = mul_mod_idea(s5, int(z5) ,17)
 		s8 = add_mod(s6, s7, 16)
-		s9 = mul_mod_idea(s8, z6, 17)
+		s9 = mul_mod_idea(s8, int(z6), 17)
 		s10 = add_mod(s7, s9, 16)
 
 		
@@ -63,10 +61,10 @@ def half_round(message_blocks: list, subkeys: list) -> list:
 	x1, x2, x3, x4 = message_blocks
 	z1, z2, z3, z4 = subkeys
 	result = [
-		mul_mod_idea(x1, z1, 17),
-		add_mod(x2, z2, 16),
-		add_mod(x3, z3, 16),
-		mul_mod_idea(x4, z4, 17),
+		mul_mod_idea(int(x1), int(z1), 17),
+		add_mod(int(x2), int(z2), 16),
+		add_mod(int(x3), int(z3), 16),
+		mul_mod_idea(int(x4), int(z4), 17),
 	]
 	return result
 
@@ -103,7 +101,7 @@ def generate_subkeys(key: str) -> list:
 				return subkeys_list
 		subkeys_list.append(subkey)
 
-def encrypt(message: str, key: list) -> str:
+def encrypt(message: str, subkeys: list) -> str:
 	"""
 	Effectue le chiffrement IDEA en fonction d'un message et d'une liste de sous-clés.
 	:param message: Un message faisant EXACTEMENT 16 bits (2 caractères)
@@ -111,20 +109,16 @@ def encrypt(message: str, key: list) -> str:
 	:return: Le message chiffré.
 	"""
 	# TODO
-	
-	subkeys = generate_subkeys(key)
-		
-	message_blocks = [int(message[i:i+4], 2) for i in range(0, len(message), 4)]
-		
-	for i in range(4):
-		message_blocks = full_round(message_blocks, subkeys[i])
-		
-	
-	final_blocks = half_round(message_blocks, subkeys[4])
-		
-	ciphertext = ''.join([bin(block)[2:].zfill(4) for block in final_blocks])
-	return ciphertext
-				
+	liste_message = []
+	chaine = ""
+	for i in range(0, len(message), 4):
+		liste_message.append(message[i:i + 4])
+	for i in range(0,len(subkeys)-1,1):
+		liste_message = full_round(liste_message, subkeys[i])
+	res = half_round(liste_message, subkeys[-1])
+	for element in res:
+		chaine+=str(bin(element)[2:])
+	return chaine
 
 def decrypt(cipher: str, subkeys: list) -> str:
 	"""
@@ -146,7 +140,7 @@ def pad(message: str) -> str:
 	:return: Le message paddé.
 	"""
 	# TODO
-	pass
+	return message + "00100000"
 
 def group(message: str) -> list:
 	"""
@@ -155,7 +149,10 @@ def group(message: str) -> list:
 	:return: Une liste de blocs qui sera passée à votre algo de chiffrement, bloc par bloc.
 	"""
 	# TODO
-	pass
+	l = []
+	for i in range(0,len(message),16):
+		l.append(message[i:i+16])
+	return l
 
 def main():
 	# Ne touchez pas à ce code sauf instruction contraire !

@@ -157,7 +157,7 @@ def inv_mod(a: int, n: int) ->int:
 	ce cas dans votre code.
 	"""
     x, y = extended_euclide(a, n)
-    
+
     # L'inverse n'existe que si a et n sont copremiers
     if gcd(a, n) != 1:
         return 0  # L'inverse n'existe pas
@@ -183,13 +183,13 @@ def exp_mod(a: int, b: int, n: int) -> int:
     """
     result = 1
     a = mod(a, n)  # Handle large base values
-    
+
     while b > 0:
         if b % 2 == 1:
             result = mul_mod(result, a, n)
         a = mul_mod(a, a, n)
         b //= 2
-    
+
     return result
 
 
@@ -202,7 +202,7 @@ def is_prime(a: int) -> bool:
     if a <= 1:
         return False
     for i in range(2, int(a**0.5) + 1):
-        if a % i == 0:
+        if mod(a,i) == 0:
             return False
     return True
 
@@ -247,5 +247,5 @@ def find_all_generators(n: int) -> list:
     for a in range(1, n):
         if is_generator(a, n):
             generators.append(a)
-    
+
     return generators

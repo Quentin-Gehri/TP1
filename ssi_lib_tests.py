@@ -1,6 +1,8 @@
 import unittest
+from random import random, randint
 
-from ssi_lib import mod, add_mod, mul_mod, shift, xor, extended_euclide, gcd, inv_mod
+from ssi_lib import mod, add_mod, mul_mod, shift, xor, extended_euclide, gcd, inv_mod, is_prime, is_generator, \
+	find_all_generators, generate_prime, exp_mod
 
 """
 Ceci est un fichier qui vous permet de tester votre code Python.
@@ -16,7 +18,8 @@ class SSILibPartOneTestCase(unittest.TestCase):
 		self.assertEqual(mod(10, 10), 0)
 		self.assertEqual(mod(11, 10), 1)
 
-	def test_mod_general_cases(self):
+	def test_mod_general_cases(self):#from ssi_lib_prof import exp_mod
+
 		# Teste tous les cas de 1 à 34 modulo 17
 		for i in range(1, 35):
 			self.assertEqual(mod(i, 17), i%17)
@@ -93,6 +96,73 @@ class SSILibPartOneTestCase(unittest.TestCase):
 		for i in range(1, 32):
 			for j in range(1, 32):
 				self.assertEqual(xor(i, j), i ^ j)
+
+class SSILibPartTwoTestCase(unittest.TestCase):
+	# INVMOD
+	def test_invmod_basic_cases(self):
+		self.assertEqual(inv_mod(14, 23), 5)
+		self.assertEqual(inv_mod(4, 17), 13)
+
+		# Si a = 0, on retourne 0
+		self.assertEqual(inv_mod(0, 17), 0)
+		# Si le PGCD n'est pas 1, on retourne 0
+		self.assertEqual(inv_mod(4, 16), 0)
+
+	# PGCD
+	def test_gcd_basic_cases(self):
+		self.assertEqual(gcd(10, 10), 10)
+		self.assertEqual(gcd(141, 255), 3)
+		self.assertEqual(gcd(7, 18), 1)
+
+	# EUCLIDE ÉTENDU
+	def test_extended_euclide_basic_cases(self):
+		# https://www.bibmath.net/crypto/index.php?action=affiche&quoi=complements/algoeuclid
+		self.assertEqual(extended_euclide(141, 255), (38, -21))
+		self.assertEqual(extended_euclide(10, 3), (1, -3))
+
+
+class SSILibPartThreeTestCase(unittest.TestCase):
+	def test_exp_mod_basic_cases(self):
+		self.assertEqual(exp_mod(1, 1, 10), 1)
+		self.assertEqual(exp_mod(1, 12, 10), 1)
+		self.assertEqual(exp_mod(2, 5, 10), 2)
+
+	def test_exp_mod_advanced_cases(self):
+		self.assertEqual(exp_mod(37, 200, 500), 1)
+		self.assertEqual(exp_mod(41, 250, 500), 1)
+		self.assertEqual(exp_mod(42, 250, 500), 124)
+
+	def test_generate_prime_generates_random_primes(self):
+		control_set = set()
+		for i in range(20):
+			prime = generate_prime(10 ** 4)
+			if prime in control_set:
+				self.fail("generate_prime is returning the same prime !")
+			else:
+				control_set.add(prime)
+
+			self.assertEqual(is_prime(prime), True)
+
+	def test_is_prime(self):
+		primes = [3307, 2593, 4139, 7829, 4253, 37, 1033]
+		non_primes = [25, 40, 90, 144, 42, 8, 2500, 3266, 9999]
+
+		for p in primes:
+			self.assertEqual(is_prime(p), True)
+
+		for n in non_primes:
+			self.assertEqual(is_prime(n), False)
+
+	def test_is_generator(self):
+		Zn = 11
+		gens = {k: k in [2, 6, 7, 8] for k in range(1, Zn)}
+		for n, prime_check in gens.items():
+			self.assertEqual(is_generator(n, Zn), prime_check)
+
+	def test_find_all_generators(self):
+		self.assertEqual(find_all_generators(11), [2, 6, 7, 8])
+		self.assertEqual(find_all_generators(13), [2, 6, 7, 11])
+		self.assertEqual(find_all_generators(17), [3, 5, 6, 7, 10, 11, 12, 14])
 
 if __name__ == '__main__':
 	unittest.main()
