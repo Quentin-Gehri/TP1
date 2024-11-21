@@ -144,7 +144,9 @@ def pad(message: str) -> str:
 	:return: Le message paddé.
 	"""
 	# TODO
-	return message + "00100000"
+	padding_char = "00100000"
+	padding_length = mod(16 - mod(len(message), 16), 16)
+	return message + (padding_char * (padding_length // 8))
 
 def group(message: str) -> list:
 	"""
