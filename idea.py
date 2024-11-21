@@ -87,9 +87,7 @@ def generate_subkeys(key: str) -> list:
 		while j < 6:
 			subkey.append(int(key[debut:fin], 2))
 			if fin > 31:
-				key = bin(shift(int(key), 6, 32))[2:]
-				while len(key) < 32:
-					key = "0" + key
+				key = fillbyte(bin(shift(int(key), 6, 32))[2:],32)
 				debut = 0
 				fin = 4
 			else:
@@ -112,13 +110,19 @@ def encrypt(message: str, subkeys: list) -> str:
 	liste_message = []
 	chaine = ""
 	for i in range(0, len(message), 4):
-		liste_message.append(message[i:i + 4])
-	for i in range(0,len(subkeys)-1,1):
+		liste_message.append(int(message[i:i + 4],2))
+	for i in range(len(subkeys) - 1):
 		liste_message = full_round(liste_message, subkeys[i])
 	res = half_round(liste_message, subkeys[-1])
 	for element in res:
-		chaine+=str(bin(element)[2:])
+		val = str(bin(element)[2:])
+		chaine += fillbyte(val, 4)
 	return chaine
+
+def fillbyte(key, val):
+	while len(key) < val:
+		key = "0" + key
+	return key
 
 def decrypt(cipher: str, subkeys: list) -> str:
 	"""
