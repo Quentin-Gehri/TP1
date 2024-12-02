@@ -7,20 +7,19 @@
 """
 
 
-def mod(a: int, n: int) ->int:
+def mod(a, b):
     """
-	Effectue un modulo.
-	:param a: Le nombre à "moduler"
-	:param n: Le modulo
-	:return: Le résultat de l'opération modulaire
-	"""
-    while a >= n:
-        a = a - n
-        
-    while a < 0 :
-        a = a + n
-      
-    return a 
+    Calcule le reste de la division de a par b de manière efficace.
+    a : int ou float - Le dividende
+    b : int ou float - Le diviseur (doit être différent de 0)
+    Retourne : int ou float - Le reste
+    """
+    if b == 0:
+        raise ValueError("Le diviseur (b) ne peut pas être zéro.")
+
+    # Réduire le calcul en utilisant les propriétés du modulo
+    result = a - b * int(a / b)
+    return result if result >= 0 else result + abs(b)
 
 def add_mod(a: int, b: int, n: int) ->int:
     """

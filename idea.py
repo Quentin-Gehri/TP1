@@ -131,8 +131,9 @@ def decrypt(cipher: str, subkeys: list) -> str:
 	:param subkeys: Les 28 sous-clés inverses.
 	:return: Le message déchiffré
 	"""
-	# TODO
-	pass
+
+
+	return encrypt(cipher, subkeys)
 
 def pad(message: str) -> str:
 	"""
