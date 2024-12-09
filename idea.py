@@ -1,6 +1,6 @@
 import argparse
-
 from ssi_lib import shift, mul_mod, add_mod, xor, inv_mod, mod
+
 def replace_zero(val):
 	if val == 16 :
 		return 0
@@ -8,47 +8,34 @@ def replace_zero(val):
 		return 16
 	else:
 		return val
-	
 
 def mul_mod_idea(a,b,n):
 	return replace_zero(mul_mod(replace_zero(a),replace_zero(b),n))
 
-
 def full_round(message_blocks: list, subkeys: list) -> list:
-		
-		"""
-		Effectue un round complet de l'algorithme IDEA.
-		:param message_blocks: Le messages sous forme de bloc (X1, X2, X3, X4)
-		:param subkeys: Les sous-clés. Il doit y en avoir EXACTEMENT autant que pour un round 	(soit 6).
-		:return: Les blocks message après un round complet.
-		"""
-		
-    
-		x1, x2, x3, x4 =  message_blocks
-		z1, z2, z3, z4, z5, z6 = subkeys
-
-
-		s1 = mul_mod_idea(int(x1), int(z1), 17)
-		s2 = add_mod(int(x2), int(z2), 16)
-		s3 = add_mod(int(x3), int(z3), 16)
-		s4 = mul_mod_idea(int(x4), int(z4), 17)
-
-		s5 = xor(s1, s3)
-		s6 = xor(s2, s4)
-		
-		s7 = mul_mod_idea(s5, int(z5) ,17)
-		s8 = add_mod(s6, s7, 16)
-		s9 = mul_mod_idea(s8, int(z6), 17)
-		s10 = add_mod(s7, s9, 16)
-
-		
-		final_x1 = xor(s1, s9)
-		final_x2 = xor(s3, s9)
-		final_x3 = xor(s2, s10)
-		final_x4 = xor(s4, s10)
-		
-		return [final_x1, final_x3,final_x2, final_x4]
-
+	"""
+	Effectue un round complet de l'algorithme IDEA.
+	:param message_blocks: Le messages sous forme de bloc (X1, X2, X3, X4)
+	:param subkeys: Les sous-clés. Il doit y en avoir EXACTEMENT autant que pour un round 	(soit 6).
+	:return: Les blocks message après un round complet.
+	"""
+	x1, x2, x3, x4 =  message_blocks
+	z1, z2, z3, z4, z5, z6 = subkeys
+	s1 = mul_mod_idea(int(x1), int(z1), 17)
+	s2 = add_mod(int(x2), int(z2), 16)
+	s3 = add_mod(int(x3), int(z3), 16)
+	s4 = mul_mod_idea(int(x4), int(z4), 17)
+	s5 = xor(s1, s3)
+	s6 = xor(s2, s4)
+	s7 = mul_mod_idea(s5, int(z5) ,17)
+	s8 = add_mod(s6, s7, 16)
+	s9 = mul_mod_idea(s8, int(z6), 17)
+	s10 = add_mod(s7, s9, 16)
+	final_x1 = xor(s1, s9)
+	final_x2 = xor(s3, s9)
+	final_x3 = xor(s2, s10)
+	final_x4 = xor(s4, s10)
+	return [final_x1, final_x3,final_x2, final_x4]
 
 def half_round(message_blocks: list, subkeys: list) -> list:
 	"""
@@ -124,16 +111,45 @@ def fillbyte(key, val):
 		key = "0" + key
 	return key
 
-def decrypt(cipher: str, subkeys: list) -> str:
-	"""
-	Effectue le déchiffrement IDEA en fonction d'un message et d'une liste de sous-clés.
-	:param cipher: Un cipher faisant EXACTEMENT 16 bits
-	:param subkeys: Les 28 sous-clés inverses.
-	:return: Le message déchiffré
-	"""
+def generate_decryption_keys(encryption_keys):
+	decryption_keys = []
+	print(encryption_keys)
+	decryption_keys.append([
+		inv_mod(encryption_keys[4][0], 17),
+		(16 - encryption_keys[4][1]) % 16,
+		(16 - encryption_keys[4][2]) % 16,
+		inv_mod(encryption_keys[4][3], 17),
+		encryption_keys[3][4],  # Non modifiées
+		encryption_keys[3][5]  # Non modifiées
+	])
+	for i in range(3, 0, -1):
+		decryption_keys.append([
+			inv_mod(encryption_keys[i][0], 17),
+			(16 - encryption_keys[i][1]) % 16,
+			(16 - encryption_keys[i][2]) % 16,
+			inv_mod(encryption_keys[i][3], 17),
+			encryption_keys[i-1][4],  # Non modifiées
+			encryption_keys[i-1][5]  # Non modifiées
+		])
+	# Dernière demi-ronde
+	decryption_keys.append([
+		inv_mod(encryption_keys[0][0], 17),
+		(16 - encryption_keys[0][1]) % 16,
+		(16 - encryption_keys[0][2]) % 16,
+		inv_mod(encryption_keys[0][3], 17)
+	])
+	return decryption_keys
 
 
-	return encrypt(cipher, subkeys)
+def decrypt(cipher: str, encryption_keys: list) -> str:
+	"""
+	Effectue le déchiffrement IDEA en fonction d'un message chiffré et des clés de chiffrement.
+	:param cipher: Un cipher faisant EXACTEMENT 16 bits.
+	:param encryption_keys: Les clés de chiffrement, utilisées pour générer les clés de décryptage.
+	:return: Le message déchiffré.
+	"""
+	decryption_keys = generate_decryption_keys(encryption_keys)
+	return encrypt(cipher, decryption_keys)
 
 def pad(message: str) -> str:
 	"""
