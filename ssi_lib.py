@@ -182,7 +182,6 @@ def exp_mod(a: int, b: int, n: int) -> int:
     """
     result = 1
     a = mod(a, n)  # Handle large base values
-
     while b > 0:
         if b % 2 == 1:
             result = mul_mod(result, a, n)
@@ -236,15 +235,34 @@ def is_generator(a: int, n: int) -> bool:
     return len(powers) == n - 1
 
 
-def find_all_generators(n: int) -> list:
+def find_all_generators(p):
     """
-    Génère la liste de tous les générateurs du groupe Zn*.
-    :param n: Le groupe dans lequel on veut obtenir tous les générateurs.
-    :return: La liste de tous les générateurs.
+    Trouve tous les générateurs du groupe multiplicatif modulo p.
+    :param p: Nombre premier.
+    :return: Liste des générateurs.
     """
+    # Étape 1 : Trouver les facteurs premiers de p-1
+    factors = []
+    n = p - 1
+    i = 2
+    while i * i <= n:
+        if n % i == 0:
+            factors.append(i)
+            while n % i == 0:
+                n //= i
+        i += 1
+    if n > 1:
+        factors.append(n)
+
+    # Étape 2 : Trouver les générateurs
     generators = []
-    for a in range(1, n):
-        if is_generator(a, n):
-            generators.append(a)
+    for g in range(2, p):
+        is_gen = True
+        for factor in factors:
+            if exp_mod(g, (p - 1) // factor, p) == 1:
+                is_gen = False
+                break
+        if is_gen:
+            generators.append(g)
 
     return generators

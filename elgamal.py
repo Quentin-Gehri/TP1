@@ -10,11 +10,11 @@ def generate_keys() -> (int, int, int, int):
 	"""
 	p = generate_prime(10000)
 	liste_g = find_all_generators(p)
-	g = liste_g[random.randint(0, len(liste_g)-1)]
-	a = random.randint(0, p - 2)
+	g = liste_g[random.randint(1, len(liste_g)-1)]
+	a = random.randint(1, p - 2)
 	A = exp_mod(g, a, p)
 
-	return (p, g, A, a)
+	return p, g, A, a
 
 
 def write_keys(a: int, p: int, g: int, A: int) -> None:
