@@ -14,12 +14,9 @@ def mod(a, b):
     b : int ou float - Le diviseur (doit être différent de 0)
     Retourne : int ou float - Le reste
     """
-    if b == 0:
-        raise ValueError("Le diviseur (b) ne peut pas être zéro.")
-
-    # Réduire le calcul en utilisant les propriétés du modulo
-    result = a - b * int(a / b)
-    return result if result >= 0 else result + abs(b)
+    quotient = a // b
+    reste = a - quotient * b
+    return reste
 
 def add_mod(a: int, b: int, n: int) ->int:
     """
