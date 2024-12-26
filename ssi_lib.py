@@ -224,6 +224,7 @@ def is_generator(a: int, n: int) -> bool:
     if gcd(a, n) != 1:
         return False
 
+    # Utilisation d'un ensemble pour suivre les puissances
     powers = set()
     for i in range(1, n):
         powers.add(exp_mod(a, i, n))
@@ -237,6 +238,12 @@ def find_all_generators(p):
     :param p: Nombre premier.
     :return: Liste des générateurs.
     """
+    #generators = []
+    #for i in range(0,p):
+    #    if is_generator(i,p):
+    #        generators.append(i)
+    #return generators
+
     # Étape 1 : Trouver les facteurs premiers de p-1
     factors = []
     n = p - 1
