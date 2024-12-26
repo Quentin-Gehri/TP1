@@ -152,12 +152,11 @@ def inv_mod(a: int, n: int) ->int:
 	SI L'INVERSE MODULAIRE N'EXISTE PAS, VOUS DEVREZ RETOURNER 0, et gérer
 	ce cas dans votre code.
 	"""
-    x, y = extended_euclide(a, n)
-
     # L'inverse n'existe que si a et n sont copremiers
     if gcd(a, n) != 1:
         return 0  # L'inverse n'existe pas
     else:
+        x, y = extended_euclide(a, n)
         return mod(x,n)
 
 """
