@@ -180,7 +180,7 @@ def exp_mod(a: int, b: int, n: int) -> int:
     result = 1
     a = mod(a, n)  # Handle large base values
     while b > 0:
-        if b % 2 == 1:
+        if mod(b, 2) == 1:
             result = mul_mod(result, a, n)
         a = mul_mod(a, a, n)
         b //= 2
