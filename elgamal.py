@@ -72,9 +72,8 @@ def sign(message: int, p: int, a: int, g: int) -> (int, int):
 		if gcd(k, p - 1) == 1:
 			break
 	Y = exp_mod(g, k, p)
-	h_m = message
 	k_inv = inv_mod(k, p - 1)
-	S = mod(k_inv * (h_m - a * Y), (p - 1))
+	S = mod(k_inv * (message - a * Y), (p - 1))
 
 	return Y, S
 
