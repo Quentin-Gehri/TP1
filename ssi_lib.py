@@ -226,8 +226,11 @@ def is_generator(a: int, n: int) -> bool:
 
     # Utilisation d'un ensemble pour suivre les puissances
     powers = set()
-    for i in range(1, n):
+    #for i in range(1, n):
+    i = 0
+    while i < n and len(powers) == i:
         powers.add(exp_mod(a, i, n))
+        i+=1
 
     return len(powers) == n - 1
 
