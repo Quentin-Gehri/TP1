@@ -73,7 +73,9 @@ def generate_subkeys(key: str) -> list:
 		j = 0
 		while j < 6:
 			subkey.append(int(key[debut:fin], 2))
+			#si on a parcouru toute la clé
 			if fin > 31:
+				#shift pour avoir changer la clé
 				key = fillbyte(bin(shift(int(key), 6, 32))[2:],32)
 				debut = 0
 				fin = 4
@@ -81,6 +83,7 @@ def generate_subkeys(key: str) -> list:
 				debut+=4
 				fin+=4
 			j+=1
+			#si on en est au clé du half round
 			if len(subkeys_list) == 4 and len(subkey) == 4:
 				subkeys_list.append(subkey)
 				return subkeys_list
@@ -96,11 +99,15 @@ def encrypt(message: str, subkeys: list) -> str:
 	# TODO
 	liste_message = []
 	chaine = ""
+	#transformer message en liste
 	for i in range(0, len(message), 4):
 		liste_message.append(int(message[i:i + 4],2))
+	#full round
 	for i in range(len(subkeys) - 1):
 		liste_message = full_round(liste_message, subkeys[i])
+	#half round
 	res = half_round(liste_message, subkeys[-1])
+	#ajout de  pour avoir 32 bits si besoin et passer en str le message
 	for element in res:
 		val = str(bin(element)[2:])
 		chaine += fillbyte(val, 4)
@@ -112,8 +119,8 @@ def fillbyte(key, val):
 	return key
 
 def generate_decryption_keys(encryption_keys):
+	#debut de la generation des cles pour decrypter
 	decryption_keys = []
-	print(encryption_keys)
 	decryption_keys.append([
 		inv_mod(encryption_keys[4][0], 17),
 		(16 - encryption_keys[4][1]) % 16,
@@ -161,9 +168,9 @@ def pad(message: str) -> str:
 	:return: Le message paddé.
 	"""
 	# TODO
-	padding_char = "00100000"
-	padding_length = mod(16 - mod(len(message), 16), 16)
-	return message + (padding_char * (padding_length // 8))
+	padding_char = "00100000" #espace
+	padding_length = mod(16 - mod(len(message), 16), 16) #identification du nombre d'espace nécessaire
+	return message + (padding_char * (padding_length // 8)) #ajout des espaces
 
 def group(message: str) -> list:
 	"""
